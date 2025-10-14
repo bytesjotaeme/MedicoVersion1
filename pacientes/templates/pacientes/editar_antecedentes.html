@@ -1,0 +1,36 @@
+{% extends 'pacientes/base.html' %}
+
+{% block content %}
+<div class="col-md-8 offset-md-2">
+    <h1 class="mb-4">Editar Antecedentes de: {{ paciente.nombre }} {{ paciente.apellido }}</h1>
+    <form method="post" class="card card-body bg-dark border-secondary">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">{{ form.personales.label }}</label>
+            {{ form.personales }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ form.familiares.label }}</label>
+            {{ form.familiares }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ form.quirurgicos.label }}</label>
+            {{ form.quirurgicos }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ form.alergias.label }}</label>
+            {{ form.alergias }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ form.medicamentos.label }}</label>
+            {{ form.medicamentos }}
+        </div>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary mt-3">Guardar Antecedentes</button>
+        </div>
+    </form>
+    <div class="text-center mt-3">
+        <a href="{% url 'detalle_paciente' paciente.id %}" class="text-info">Cancelar y volver al expediente</a>
+    </div>
+</div>
+{% endblock %}

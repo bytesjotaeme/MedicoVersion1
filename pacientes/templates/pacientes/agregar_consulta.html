@@ -1,0 +1,28 @@
+{% extends 'pacientes/base.html' %}
+
+{% block content %}
+<div class="col-md-8 offset-md-2">
+    <h1 class="mb-4">Agregar Nueva Consulta para: {{ paciente.nombre }} {{ paciente.apellido }}</h1>
+    <form method="post" class="card card-body bg-dark border-secondary">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">{{ form.sintomas.label }}</label>
+            {{ form.sintomas }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ form.diagnostico.label }}</label>
+            {{ form.diagnostico }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ form.tratamiento.label }}</label>
+            {{ form.tratamiento }}
+        </div>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary mt-3">Guardar Consulta</button>
+        </div>
+    </form>
+    <div class="text-center mt-3">
+        <a href="{% url 'detalle_paciente' paciente.id %}" class="text-info">Cancelar y volver al expediente</a>
+    </div>
+</div>
+{% endblock %}

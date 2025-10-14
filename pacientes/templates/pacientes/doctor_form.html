@@ -1,0 +1,26 @@
+{% extends 'pacientes/base.html' %}
+
+{% block content %}
+<div class="col-md-6 offset-md-3">
+    {% if doctor %}
+        <h1 class="mb-4">Editar Doctor</h1>
+    {% else %}
+        <h1 class="mb-4">Añadir Nuevo Doctor</h1>
+    {% endif %}
+    
+    <form method="post" class="card card-body bg-dark border-secondary">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="d-grid">
+            {% if doctor %}
+                <button type="submit" class="btn btn-primary mt-3">Actualizar Cambios</button>
+            {% else %}
+                <button type="submit" class="btn btn-primary mt-3">Guardar Doctor</button>
+            {% endif %}
+        </div>
+    </form>
+    <div class="text-center mt-3">
+        <a href="{% url 'lista_doctores' %}" class="text-info">Volver a la lista</a>
+    </div>
+</div>
+{% endblock %}

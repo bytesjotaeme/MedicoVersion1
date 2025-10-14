@@ -1,0 +1,49 @@
+{% extends 'pacientes/base.html' %}
+
+{% block page_title %}
+    Gestión de Doctores
+{% endblock %}
+
+{% block page_actions %}
+    <a href="{% url 'crear_doctor' %}" class="btn btn-primary">Añadir Nuevo Doctor</a>
+{% endblock %}
+
+{% block content %}
+<div class="card bg-dark border-secondary">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Apellido</th>
+                        <th>Nombre</th>
+                        <th>Especialidad</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doctor in doctores %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'detalle_doctor' doctor.id %}" class="text-white text-decoration-none">{{ doctor.apellido }}</a>
+                        </td>
+                        <td>{{ doctor.nombre }}</td>
+                        <td>{{ doctor.especialidad }}</td>
+                        <td>{{ doctor.telefono|default:"N/A" }}</td>
+                        <td>
+                            <a href="{% url 'editar_doctor' doctor.id %}" class="btn btn-sm btn-outline-info"><i class="bi bi-pencil-square"></i></a>
+                            <a href="{% url 'eliminar_doctor' doctor.id %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">Aún no hay doctores registrados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

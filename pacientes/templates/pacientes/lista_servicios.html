@@ -1,0 +1,47 @@
+{% extends 'pacientes/base.html' %}
+
+{% block page_title %}
+    Gestión de Servicios
+{% endblock %}
+
+{% block page_actions %}
+    <a href="{% url 'crear_servicio' %}" class="btn btn-primary">Añadir Nuevo Servicio</a>
+{% endblock %}
+
+{% block content %}
+<div class="card bg-dark border-secondary">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Duración (min)</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for servicio in servicios %}
+                    <tr>
+                        <td>{{ servicio.nombre }}</td>
+                        <td>{{ servicio.descripcion|default:"N/A" }}</td>
+                        <td>{{ servicio.duracion_minutos }}</td>
+                        <td>${{ servicio.precio|default:"N/A" }}</td>
+                        <td>
+                            <a href="{% url 'editar_servicio' servicio.id %}" class="btn btn-sm btn-outline-info"><i class="bi bi-pencil-square"></i></a>
+                            <a href="{% url 'eliminar_servicio' servicio.id %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">Aún no hay servicios registrados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends 'pacientes/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Expediente de: {{ paciente.nombre }} {{ paciente.apellido }}</h2>
+    <a href="{% url 'lista_pacientes' %}" class="btn btn-secondary">Volver a la lista</a>
+</div>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info-tab-pane" type="button" role="tab" aria-controls="info-tab-pane" aria-selected="true">Información Personal</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="antecedentes-tab" data-bs-toggle="tab" data-bs-target="#antecedentes-tab-pane" type="button" role="tab" aria-controls="antecedentes-tab-pane" aria-selected="false">Antecedentes</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="exploracion-tab" data-bs-toggle="tab" data-bs-target="#exploracion-tab-pane" type="button" role="tab" aria-controls="exploracion-tab-pane" aria-selected="false">Exploración Física</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="consultas-tab" data-bs-toggle="tab" data-bs-target="#consultas-tab-pane" type="button" role="tab" aria-controls="consultas-tab-pane" aria-selected="false">Consultas</button>
+    </li>
+</ul>
+
+<div class="tab-content card bg-dark border-secondary border-top-0" id="myTabContent">
+    
+    <div class="tab-pane fade show active p-4" id="info-tab-pane" role="tabpanel" aria-labelledby="info-tab" tabindex="0">
+        <div class="d-flex justify-content-between">
+            <h4>Datos del Paciente</h4>
+            <a href="{% url 'editar_paciente' paciente.id %}" class="btn btn-sm btn-outline-info">Editar Información</a>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>DNI:</strong> {{ paciente.dni }}</p>
+                <p><strong>Email:</strong> {{ paciente.email|default:"No especificado" }}</p>
+                <p><strong>Teléfono:</strong> {{ paciente.telefono|default:"No especificado" }}</p>
+                <p><strong>Fecha de Nacimiento:</strong> {{ paciente.fecha_nacimiento|default:"No especificada" }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Sexo:</strong> {{ paciente.get_sexo_display|default:"No especificado" }}</p>
+                <p><strong>Domicilio:</strong> {{ paciente.domicilio|default:"No especificado" }}</p>
+                <p><strong>Ciudad:</strong> {{ paciente.ciudad|default:"No especificada" }}</p>
+            </div>
+        </div>
+        <h5 class="mt-3">Observaciones Generales</h5>
+        <p class="text-muted">{{ paciente.observaciones|default:"Sin observaciones." }}</p>
+    </div>
+
+    <div class="tab-pane fade p-4" id="antecedentes-tab-pane" role="tabpanel" aria-labelledby="antecedentes-tab" tabindex="0">
+        <div class="d-flex justify-content-between">
+            <h4>Historial Médico</h4>
+            <a href="{% url 'editar_antecedentes' paciente.id %}" class="btn btn-sm btn-outline-info">Editar Antecedentes</a>
+        </div>
+        <hr>
+        <h5>Personales:</h5>
+        <p class="text-muted">{{ paciente.antecedente.personales|default:"No especificado." }}</p>
+        <h5>Familiares:</h5>
+        <p class="text-muted">{{ paciente.antecedente.familiares|default:"No especificado." }}</p>
+        <h5>Quirúrgicos:</h5>
+        <p class="text-muted">{{ paciente.antecedente.quirurgicos|default:"No especificado." }}</p>
+        <h5>Alergias:</h5>
+        <p class="text-muted">{{ paciente.antecedente.alergias|default:"No especificado." }}</p>
+        <h5>Medicamentos Actuales:</h5>
+        <p class="text-muted">{{ paciente.antecedente.medicamentos|default:"No especificado." }}</p>
+    </div>
+
+    <div class="tab-pane fade p-4" id="exploracion-tab-pane" role="tabpanel" aria-labelledby="exploracion-tab" tabindex="0">
+        <div class="d-flex justify-content-between">
+            <h4>Signos Vitales y Hallazgos</h4>
+            <a href="{% url 'editar_exploracion_fisica' paciente.id %}" class="btn btn-sm btn-outline-info">Editar Exploración</a>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-4">
+                <p><strong>Peso:</strong> {{ paciente.exploracionfisica.peso|default:"N/A" }} kg</p>
+                <p><strong>Talla:</strong> {{ paciente.exploracionfisica.talla|default:"N/A" }} m</p>
+            </div>
+            <div class="col-md-4">
+                <p><strong>Presión Arterial:</strong> {{ paciente.exploracionfisica.presion_arterial|default:"N/A" }}</p>
+                <p><strong>Frec. Cardíaca:</strong> {{ paciente.exploracionfisica.frecuencia_cardiaca|default:"N/A" }} lat/min</p>
+            </div>
+            <div class="col-md-4">
+                <p><strong>Frec. Respiratoria:</strong> {{ paciente.exploracionfisica.frecuencia_respiratoria|default:"N/A" }} resp/min</p>
+                <p><strong>Temperatura:</strong> {{ paciente.exploracionfisica.temperatura|default:"N/A" }} °C</p>
+            </div>
+        </div>
+        <h5 class="mt-3">Hallazgos Relevantes</h5>
+        <p class="text-muted">{{ paciente.exploracionfisica.hallazgos|default:"Sin hallazgos." }}</p>
+    </div>
+
+    <div class="tab-pane fade p-4" id="consultas-tab-pane" role="tabpanel" aria-labelledby="consultas-tab" tabindex="0">
+        <div class="d-flex justify-content-between">
+            <h4>Historial de Consultas</h4>
+            <a href="{% url 'agregar_consulta' paciente.id %}" class="btn btn-sm btn-primary">Registrar Nueva Consulta</a>
+        </div>
+        <hr>
+        {% for consulta in consultas %}
+            <div class="card bg-dark border-secondary mb-3">
+                <div class="card-header">
+                    <strong>Fecha:</strong> {{ consulta.fecha_consulta|date:"d/m/Y H:i" }}
+                </div>
+                <div class="card-body">
+                    <h5>Síntomas</h5>
+                    <p>{{ consulta.sintomas }}</p>
+                    <h5>Diagnóstico</h5>
+                    <p>{{ consulta.diagnostico }}</p>
+                    <h5>Tratamiento</h5>
+                    <p>{{ consulta.tratamiento }}</p>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center">No hay consultas registradas para este paciente.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

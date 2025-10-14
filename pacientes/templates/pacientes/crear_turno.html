@@ -1,0 +1,17 @@
+{% extends 'pacientes/base.html' %}
+
+{% block content %}
+<div class="col-md-6 offset-md-3">
+    <h1 class="mb-4">Agendar Nuevo Turno</h1>
+    <form method="post" class="card card-body bg-dark border-secondary">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary mt-3">Guardar Turno</button>
+        </div>
+    </form>
+    <div class="text-center mt-3">
+        <a href="{% url 'lista_turnos' %}" class="text-info">Cancelar y volver a la agenda</a>
+    </div>
+</div>
+{% endblock %}

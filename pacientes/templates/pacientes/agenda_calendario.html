@@ -1,0 +1,88 @@
+{% extends 'pacientes/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Agenda de Turnos</h1>
+    <div class="d-flex align-items-center">
+        <div class="me-3">
+            <select id="doctorFilter" class="form-select">
+                <option value="">Todos los doctores</option>
+                {% for doctor in doctores %}
+                    <option value="{{ doctor.id }}">{{ doctor }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <a href="{% url 'crear_turno' %}" class="btn btn-primary">Agendar Turno</a>
+    </div>
+</div>
+
+<div id="calendar" class="card card-body bg-dark border-secondary"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var doctorFilterEl = document.getElementById('doctorFilter');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            // Definimos la fuente de eventos como un objeto para poder modificarla
+            eventSources: [
+                {
+                    url: "{% url 'turnos_api' %}",
+                    id: 'turnosSource' // Le damos un ID para identificarlo
+                }
+            ],
+            locale: 'es',
+            slotMinTime: '08:00:00',
+            slotMaxTime: '20:00:00',
+            allDaySlot: false,
+            eventDidMount: function(info) {
+                // Pequeño truco para mostrar más info al pasar el mouse
+                var tooltip = new bootstrap.Tooltip(info.el, {
+                    title: `
+                        Paciente: ${info.event.extendedProps.paciente}<br>
+                        Doctor: ${info.event.extendedProps.doctor}<br>
+                        Servicio: ${info.event.extendedProps.servicio}
+                    `,
+                    html: true,
+                    placement: 'top',
+                    trigger: 'hover',
+                    container: 'body'
+                });
+            },
+        });
+
+        // Esta función se ejecuta cuando el usuario cambia el doctor en el menú
+        doctorFilterEl.addEventListener('change', function() {
+            var doctorId = this.value;
+            var source = calendar.getEventSourceById('turnosSource');
+
+            // Eliminamos la fuente de eventos anterior
+            if (source) {
+                source.remove();
+            }
+
+            // Creamos la nueva URL con el filtro
+            var newUrl = "{% url 'turnos_api' %}";
+            if (doctorId) {
+                newUrl += '?doctor_id=' + doctorId;
+            }
+
+            // Añadimos la nueva fuente de eventos, y el calendario se refrescará solo
+            calendar.addEventSource({
+                url: newUrl,
+                id: 'turnosSource'
+            });
+        });
+
+        calendar.render();
+    });
+</script>
+{% endblock %}
