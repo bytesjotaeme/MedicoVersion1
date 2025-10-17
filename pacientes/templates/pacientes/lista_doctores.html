@@ -1,15 +1,12 @@
 {% extends 'pacientes/base.html' %}
 
-{% block page_title %}
-    Gestión de Doctores
-{% endblock %}
-
-{% block page_actions %}
-    <a href="{% url 'crear_doctor' %}" class="btn btn-primary">Añadir Nuevo Doctor</a>
-{% endblock %}
-
 {% block content %}
-<div class="card bg-dark border-secondary">
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Gestión de Doctores</h4>
+        <a href="{% url 'crear_doctor' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Añadir Doctor</a>
+    </div>
+
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-hover">
@@ -26,14 +23,14 @@
                     {% for doctor in doctores %}
                     <tr>
                         <td>
-                            <a href="{% url 'detalle_doctor' doctor.id %}" class="text-white text-decoration-none">{{ doctor.apellido }}</a>
+                            <a href="{% url 'detalle_doctor' doctor.id %}" class="text-body text-decoration-none">{{ doctor.apellido }}</a>
                         </td>
                         <td>{{ doctor.nombre }}</td>
                         <td>{{ doctor.especialidad }}</td>
                         <td>{{ doctor.telefono|default:"N/A" }}</td>
                         <td>
-                            <a href="{% url 'editar_doctor' doctor.id %}" class="btn btn-sm btn-outline-info"><i class="bi bi-pencil-square"></i></a>
-                            <a href="{% url 'eliminar_doctor' doctor.id %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                            <a href="{% url 'editar_doctor' doctor.id %}" class="btn btn-sm btn-outline-info" title="Editar"><i class="bi bi-pencil-square"></i></a>
+                            <a href="{% url 'eliminar_doctor' doctor.id %}" class="btn btn-sm btn-outline-danger" title="Eliminar"><i class="bi bi-trash"></i></a>
                         </td>
                     </tr>
                     {% empty %}

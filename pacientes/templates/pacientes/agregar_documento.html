@@ -1,0 +1,29 @@
+{% extends 'pacientes/base.html' %}
+
+{% block content %}
+<div class="col-md-6 offset-md-3">
+    <h1 class="mb-4">Subir Nuevo Documento para: {{ paciente.nombre }} {{ paciente.apellido }}</h1>
+    
+    <form method="post" enctype="multipart/form-data" class="card card-body bg-dark border-secondary">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">{{ form.titulo.label }}</label>
+            {{ form.titulo }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ form.fecha_estudio.label }}</label>
+            {{ form.fecha_estudio }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ form.archivo.label }}</label>
+            {{ form.archivo }}
+        </div>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary mt-3">Subir Documento</button>
+        </div>
+    </form>
+    <div class="text-center mt-3">
+        <a href="{% url 'detalle_paciente' paciente.id %}" class="text-info">Cancelar y volver al expediente</a>
+    </div>
+</div>
+{% endblock %}

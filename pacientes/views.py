@@ -1,30 +1,51 @@
 # pacientes/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from .models import Paciente, Turno, Antecedente, ExploracionFisica, Consulta, Doctor, Servicio, Horario
-from .forms import PacienteForm, TurnoForm, AntecedenteForm, ExploracionFisicaForm, ConsultaForm, DoctorForm, ServicioForm, HorarioForm
+from .models import Paciente, Turno, Antecedente, ExploracionFisica, Consulta, Doctor, Servicio, Horario, Documento
+from .forms import PacienteForm, TurnoForm, AntecedenteForm, ExploracionFisicaForm, ConsultaForm, DoctorForm, ServicioForm, HorarioForm, DocumentoForm
 from django.db.models import Q
 import datetime
 from django.utils import timezone
 
-# --- Vistas de Pacientes ---
+def homepage(request):
+    return render(request, 'pacientes/homepage.html')
+
+# --- VISTA DE PACIENTES (MODIFICADA) ---
 def lista_pacientes(request):
     query = request.GET.get('q', '')
     if query:
-        pacientes = Paciente.objects.filter(
+        pacientes_list = Paciente.objects.filter(
             Q(nombre__icontains=query) |
             Q(apellido__icontains=query) |
             Q(dni__icontains=query)
         )
     else:
-        pacientes = Paciente.objects.all()
-    # AQUÍ ESTABA EL ERROR, YA ESTÁ CORREGIDO
-    return render(request, 'pacientes/lista_pacientes.html', {'pacientes': pacientes, 'query': query})
+        pacientes_list = Paciente.objects.all()
+
+    # Calculamos las estadísticas
+    total_pacientes = Paciente.objects.count()
+    turnos_activos = Turno.objects.filter(estado__in=['PENDIENTE', 'CONFIRMADO']).count()
+    proximo_turno = Turno.objects.filter(fecha__gte=timezone.now().date(), estado__in=['PENDIENTE', 'CONFIRMADO']).order_by('fecha', 'hora').first()
+
+    context = {
+        'pacientes': pacientes_list,
+        'query': query,
+        'total_pacientes': total_pacientes,
+        'turnos_activos': turnos_activos,
+        'proximo_turno': proximo_turno,
+    }
+    return render(request, 'pacientes/lista_pacientes.html', context)
+# --- FIN DE LA VISTA MODIFICADA ---
 
 def detalle_paciente(request, id):
     paciente = get_object_or_404(Paciente, id=id)
     consultas = paciente.consultas.all()
-    return render(request, 'pacientes/detalle_paciente.html', {'paciente': paciente, 'consultas': consultas})
+    documentos = paciente.documentos.all()
+    return render(request, 'pacientes/detalle_paciente.html', {
+        'paciente': paciente,
+        'consultas': consultas,
+        'documentos': documentos
+    })
 
 def crear_paciente(request):
     if request.method == 'POST':
@@ -88,6 +109,19 @@ def agregar_consulta(request, id):
     else:
         form = ConsultaForm()
     return render(request, 'pacientes/agregar_consulta.html', {'form': form, 'paciente': paciente})
+
+def agregar_documento(request, id):
+    paciente = get_object_or_404(Paciente, id=id)
+    if request.method == 'POST':
+        form = DocumentoForm(request.POST, request.FILES)
+        if form.is_valid():
+            documento = form.save(commit=False)
+            documento.paciente = paciente
+            documento.save()
+            return redirect('detalle_paciente', id=paciente.id)
+    else:
+        form = DocumentoForm()
+    return render(request, 'pacientes/agregar_documento.html', {'form': form, 'paciente': paciente})
 
 def agenda_calendario(request):
     doctores = Doctor.objects.all()
@@ -297,7 +331,6 @@ def solicitar_turno(request):
         dni = request.POST.get('dni')
         telefono = request.POST.get('telefono')
         email = request.POST.get('email')
-
         paciente, created = Paciente.objects.get_or_create(
             dni=dni,
             defaults={
@@ -307,10 +340,8 @@ def solicitar_turno(request):
                 'email': email
             }
         )
-        
         doctor = get_object_or_404(Doctor, id=doctor_id)
         servicio = get_object_or_404(Servicio, id=servicio_id)
-        
         Turno.objects.create(
             paciente=paciente,
             doctor=doctor,
@@ -319,9 +350,7 @@ def solicitar_turno(request):
             hora=hora,
             estado='CONFIRMADO'
         )
-        
         return redirect('solicitud_exitosa')
-
     doctores = Doctor.objects.all()
     servicios = Servicio.objects.all()
     context = {

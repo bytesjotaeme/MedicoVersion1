@@ -1,0 +1,12 @@
+# Archivos de entorno y secretos (¡El más importante!)
+.env
+
+# Carpeta del entorno virtual
+venv/
+
+# Archivos de caché de Python
+__pycache__/
+*.pyc
+
+# Archivos de base de datos local (si usáramos SQLite)
+db.sqlite3

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Prueba Simple de IA</title>
+</head>
+<body>
+
+    <h1>Prueba de Conexión con Gemini</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="prompt" rows="4" cols="50" required>{{ prompt_enviado }}</textarea>
+        <br>
+        <button type="submit">Enviar Pregunta</button>
+    </form>
+
+    {% if respuesta %}
+        <hr>
+        <h2>Tu Pregunta:</h2>
+        <p>{{ prompt_enviado }}</p>
+        <h2>Respuesta de la IA:</h2>
+        <pre>{{ respuesta }}</pre>
+    {% endif %}
+
+</body>
+</html>

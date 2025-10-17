@@ -19,6 +19,9 @@
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="consultas-tab" data-bs-toggle="tab" data-bs-target="#consultas-tab-pane" type="button" role="tab" aria-controls="consultas-tab-pane" aria-selected="false">Consultas</button>
     </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="documentos-tab" data-bs-toggle="tab" data-bs-target="#documentos-tab-pane" type="button" role="tab" aria-controls="documentos-tab-pane" aria-selected="false">Documentos</button>
+    </li>
 </ul>
 
 <div class="tab-content card bg-dark border-secondary border-top-0" id="myTabContent">
@@ -111,6 +114,27 @@
         {% empty %}
             <p class="text-center">No hay consultas registradas para este paciente.</p>
         {% endfor %}
+    </div>
+
+    <div class="tab-pane fade p-4" id="documentos-tab-pane" role="tabpanel" aria-labelledby="documentos-tab" tabindex="0">
+        <div class="d-flex justify-content-between">
+            <h4>Estudios y Archivos Adjuntos</h4>
+            <a href="{% url 'agregar_documento' paciente.id %}" class="btn btn-sm btn-primary"><i class="bi bi-upload"></i> Cargar Nuevo Documento</a>
+        </div>
+        <hr>
+        <ul class="list-group">
+            {% for doc in documentos %}
+                <li class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        <a href="{{ doc.archivo.url }}" target="_blank">{{ doc.titulo }}</a>
+                        <small class="d-block text-muted">Fecha: {{ doc.fecha_estudio|date:"d/m/Y" }}</small>
+                    </div>
+                    </li>
+            {% empty %}
+                <li class="list-group-item bg-dark text-white text-center">No hay documentos cargados para este paciente.</li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
 {% endblock %}

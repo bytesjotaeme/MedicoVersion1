@@ -95,26 +95,32 @@ class Consulta(models.Model):
     def __str__(self):
         return f"Consulta de {self.paciente.nombre} el {self.fecha_consulta.strftime('%d/%m/%Y')}"
 
-# --- AÑADE ESTE NUEVO MODELO COMPLETO ---
 class Horario(models.Model):
     DIA_CHOICES = [
-        (0, 'Lunes'),
-        (1, 'Martes'),
-        (2, 'Miércoles'),
-        (3, 'Jueves'),
-        (4, 'Viernes'),
-        (5, 'Sábado'),
-        (6, 'Domingo'),
+        (0, 'Lunes'), (1, 'Martes'), (2, 'Miércoles'), (3, 'Jueves'),
+        (4, 'Viernes'), (5, 'Sábado'), (6, 'Domingo'),
     ]
-    # Un doctor puede tener varios horarios. Si se borra el doctor, se borran sus horarios.
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='horarios')
     dia_semana = models.IntegerField(choices=DIA_CHOICES)
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()
 
     class Meta:
-        # Evita que se pueda crear un horario duplicado para el mismo doctor en el mismo día y hora
         unique_together = ('doctor', 'dia_semana', 'hora_inicio', 'hora_fin')
+        ordering = ['dia_semana', 'hora_inicio']
+
 
     def __str__(self):
         return f"Horario de {self.doctor.apellido}: {self.get_dia_semana_display()} de {self.hora_inicio} a {self.hora_fin}"
+
+class Documento(models.Model):
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='documentos')
+    titulo = models.CharField(max_length=200)
+    fecha_estudio = models.DateField(default=timezone.now)
+    archivo = models.FileField(upload_to='documentos/')
+    
+    class Meta:
+        ordering = ['-fecha_estudio']
+
+    def __str__(self):
+        return f"Documento '{self.titulo}' de {self.paciente.apellido}"

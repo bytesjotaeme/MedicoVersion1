@@ -1,0 +1,59 @@
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Sección Hero */
+.hero-section {
+    height: 60vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=2070&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-section h1 {
+    font-weight: 700;
+}
+
+/* Tarjetas de Servicio */
+.card {
+    border: none;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12) !important;
+}
+
+/* Pie de Página */
+.footer-dark {
+    background-color: #1a2533;
+}
+
+.footer-dark .text-primary {
+    color: #4dabf7 !important;
+}
+
+/* Sección Hero para páginas internas (Solicitar Turno, etc.) */
+.hero-section-small {
+    height: 30vh; /* Más pequeño que el hero principal */
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1519451928001-da79644f1c1f?q=80&w=2070&auto=format&fit=crop'); /* Otra imagen de fondo más sutil */
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 3rem; /* Espacio debajo del hero */
+}
+
+.hero-section-small h1 {
+    font-weight: 600;
+}
+
+/* Estilos para los formularios */
+.card-title {
+    color: #0d6efd; /* Color primario de Bootstrap para los títulos */
+    font-weight: 600;
+}
+
+/* Añadir un poco de estilo a los labels obligatorios */
+.form-label .text-danger {
+    font-weight: bold;
+}

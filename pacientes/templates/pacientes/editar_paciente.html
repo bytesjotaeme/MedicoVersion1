@@ -1,17 +1,17 @@
 {% extends 'pacientes/base.html' %}
 
 {% block content %}
-<div class="col-md-6 offset-md-3">
-    <h1 class="mb-4">Editar Paciente</h1>
-    <form method="post" class="card card-body bg-dark border-secondary">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <div class="d-grid">
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h4 class="mb-0">Editar Paciente</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
             <button type="submit" class="btn btn-primary mt-3">Actualizar Cambios</button>
-        </div>
-    </form>
-    <div class="text-center mt-3">
-        <a href="{% url 'lista_pacientes' %}" class="text-info">Cancelar y volver</a>
+            <a href="{% url 'detalle_paciente' form.instance.id %}" class="btn btn-secondary mt-3">Cancelar</a>
+        </form>
     </div>
 </div>
 {% endblock %}
