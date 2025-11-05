@@ -1,16 +1,21 @@
 # config/settings.py
 
 from pathlib import Path
+import os               # <-- 1. AÑADE ESTA LÍNEA
+from dotenv import load_dotenv # <-- 2. AÑADE ESTA LÍNEA
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# --- 3. AÑADE ESTA LÍNEA PARA CARGAR EL .env ---
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-2-tem4mwpyac2(x0jgn5zuo_fgq-xauo4cjjlvj=9y3@&9uj&w'
+# 4. TAMBIÉN PODEMOS OCULTAR LA SECRET KEY
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-2-tem4mwpyac2(x0jgn5zuo_fgq-xauo4cjjlvj=9y3@&9uj&w')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -41,11 +46,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 
-# --- ESTA ES LA ÚNICA CORRECCIÓN NECESARIA ---
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # Aquí le decimos a Django que busque plantillas en la carpeta de tu app
         'DIRS': [BASE_DIR / 'pacientes/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -58,20 +61,19 @@ TEMPLATES = [
         },
     },
 ]
-# --- FIN DE LA CORRECCIÓN ---
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# Database
+# --- 5. SECCIÓN DE BASE DE DATOS MODIFICADA ---
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db_turnos',
-        'USER': 'root',
-        'PASSWORD': 'Chivito09', # Asegúrate de que esta sea tu contraseña correcta
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
@@ -102,6 +104,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
+# Esta línea es necesaria para que Django sepa dónde encontrar tu CSS cyberpunk
+STATICFILES_DIRS = [
+    BASE_DIR / 'pacientes/static',
+]
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
